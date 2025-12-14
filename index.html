@@ -57,10 +57,11 @@
 
         <!-- SOS Button -->
         <div class="flex justify-center mb-8">
-            <button onclick="sendSOS()"
+            <button id="sosBtn"
                     class="pulse-sos bg-pink-500 text-white w-40 h-40 rounded-full text-xl font-bold shadow-xl">
                 SOS
             </button>
+
         </div>
 
         <!-- Quick Actions -->
@@ -68,36 +69,100 @@
             <button class="bg-white rounded-2xl p-4 shadow text-purple-600">📍 Share Location</button>
             <button class="bg-white rounded-2xl p-4 shadow text-purple-600">🚶 Walk With Me</button>
             <button class="bg-white rounded-2xl p-4 shadow text-purple-600">📞 Emergency Call</button>
-            <button class="bg-white rounded-2xl p-4 shadow text-purple-600">⚙️ Settings</button>
+            <button onclick="addContacts()" class="bg-white rounded-2xl p-4 shadow text-purple-600">
+                ⚙️ Settings
+            </button>
+
         </div>
 
     </div>
 
     <script>
-        function sendSOS() {
-            if (!navigator.geolocation) {
-                alert("Geolocation is not supported on this device.");
+        let tapCount = 0;
+        let tapTimer = null;
+
+        const sosBtn = document.getElementById("sosBtn");
+
+        sosBtn.addEventListener("click", () => {
+            tapCount++;
+
+            if (tapCount === 1) {
+                tapTimer = setTimeout(() => {
+                    sendSOS("normal");
+                    tapCount = 0;
+                }, 1200);
+            }
+
+            if (tapCount === 3) {
+                clearTimeout(tapTimer);
+                sendSOS("strong");
+                tapCount = 0;
+            }
+        });
+
+        function sendSOS(type) {
+            <script>
+                function addContacts() {
+            const input = prompt(
+                "Enter emergency WhatsApp numbers\n" +
+                "Comma separated, with country code\n\n" +
+                "Example:\n9180xxxxxx,9199xxxxxx"
+                );
+
+                if (!input) return;
+
+                const numbers = input
+                .split(",")
+                .map(n => n.trim())
+                .filter(n => n.length >= 10);
+
+                if (numbers.length === 0) {
+                    alert("No valid numbers entered");
                 return;
             }
 
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-
-                    const locationLink = `https://www.google.com/maps?q=${lat},${lon}`;
-
-                    const message = `🚨 SOS ALERT 🚨\nI need help immediately.\n📍 My live location:\n${locationLink}`;
-
-                    const phoneNumber = "918078416898";
-                    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-
-                    window.location.href = whatsappURL;
-                },
-                () => alert("Unable to fetch location. Please enable GPS.")
-            );
+                localStorage.setItem("guardianContacts", JSON.stringify(numbers));
+                alert("Emergency contacts saved successfully 💜");
         }
     </script>
+
+    if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+    (position) => {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    const locationLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+    let message = "";
+
+    if (type === "strong") {
+    message = `🚨🚨 EMERGENCY ALERT 🚨🚨
+    THIS IS URGENT. PLEASE HELP IMMEDIATELY!
+    📍 Live location:
+    ${locationLink}`;
+    } else {
+    message = `🚨 SOS ALERT 🚨
+    I need help.
+    📍 Location:
+    ${locationLink}`;
+    }
+
+    const contacts = JSON.parse(localStorage.getItem("guardianContacts")) || ["918078416898"];
+
+    contacts.forEach(number => {
+    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+    });
+    },
+    () => alert("Enable GPS to send SOS")
+    );
+    }
+    </script>
+
 
 </body>
 </html>
