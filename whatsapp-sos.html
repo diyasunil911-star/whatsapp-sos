@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Women Safety SOS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="text-align:center; margin-top:100px; font-family:Arial">
+
+    <h2>🚨 Women Safety SOS</h2>
+
+    <button onclick="sendSOS()"
+            style="font-size:22px; padding:15px 30px; background:red; color:white; border:none; border-radius:10px;">
+        SEND SOS
+    </button>
+
+    <script>
+    function sendSOS() {
+      if (!navigator.geolocation) {
+        alert("Location not supported");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          const locationLink = `https://maps.google.com/?q=${lat},${lon}`;
+
+          sendWhatsApp(locationLink);
+        },
+        () => {
+          alert("Please allow location access");
+        }
+      );
+    }
+
+    function sendWhatsApp(locationLink) {
+      const phoneNumber = "918078416898"; // 👈 CHANGE NUMBER HERE
+
+      const message = encodeURIComponent(
+        `🚨 SOS ALERT!\nI need immediate help.\nMy live location:\n${locationLink}`
+      );
+
+      const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+
+      window.location.href = whatsappURL;
+    }
+    </script>
+
+</body>
+</html>
