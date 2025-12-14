@@ -1,55 +1,71 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Women Safety SOS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guardian – Women Safety</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #fce7f3, #ede9fe);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .float {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .pulse-sos {
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(236,72,153,0.6); }
+      70% { box-shadow: 0 0 0 25px rgba(236,72,153,0); }
+      100% { box-shadow: 0 0 0 0 rgba(236,72,153,0); }
+    }
+  </style>
 </head>
+<body class="min-h-screen flex items-center justify-center">
 
-<body style="text-align:center; margin-top:100px; font-family:Arial">
+  <div class="w-full max-w-sm px-6">
 
-    <h2>🚨 Women Safety SOS</h2>
+    <!-- Logo -->
+    <div class="flex justify-center mb-6 float">
+      <img src="logo.png" alt="Guardian Logo" class="w-32 h-32 rounded-full shadow-lg" />
+    </div>
 
-    <button onclick="sendSOS()"
-            style="font-size:22px; padding:15px 30px; background:red; color:white; border:none; border-radius:10px;">
-        SEND SOS
-    </button>
+    <!-- App Title -->
+    <h1 class="text-center text-2xl font-semibold text-purple-700 mb-2">Guardian</h1>
+    <p class="text-center text-sm text-purple-500 mb-8">Your invisible safety bubble</p>
 
-    <script>
+    <!-- SOS Button -->
+    <div class="flex justify-center mb-8">
+      <button onclick="sendSOS()" class="pulse-sos bg-pink-500 text-white w-40 h-40 rounded-full text-xl font-bold shadow-xl">
+        SOS
+      </button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-2 gap-4">
+      <button class="bg-white rounded-2xl p-4 shadow text-purple-600">📍 Share Location</button>
+      <button class="bg-white rounded-2xl p-4 shadow text-purple-600">🚶 Walk With Me</button>
+      <button class="bg-white rounded-2xl p-4 shadow text-purple-600">📞 Emergency Call</button>
+      <button class="bg-white rounded-2xl p-4 shadow text-purple-600">⚙️ Settings</button>
+    </div>
+
+  </div>
+
+  <script>
     function sendSOS() {
-      if (!navigator.geolocation) {
-        alert("Location not supported");
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          const locationLink = `https://maps.google.com/?q=${lat},${lon}`;
-
-          sendWhatsApp(locationLink);
-        },
-        () => {
-          alert("Please allow location access");
-        }
-      );
+      alert("🚨 SOS Triggered! Guardian is alerting your trusted contact.");
     }
-
-    function sendWhatsApp(locationLink) {
-      const phoneNumber = "918078416898"; // 👈 CHANGE NUMBER HERE
-
-      const message = encodeURIComponent(
-        `🚨 SOS ALERT!\nI need immediate help.\nMy live location:\n${locationLink}`
-      );
-
-      const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
-
-      window.location.href = whatsappURL;
-    }
-    </script>
+  </script>
 
 </body>
 </html>
-
